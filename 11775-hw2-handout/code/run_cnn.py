@@ -15,11 +15,11 @@ class ExtractCNNFeature(System):
         self.resources = resources.select(cpu=True)
         # Manual allocation of GPU resources for multi-pipeline per GPU setup
         gpu_resources = resources.select(gpu=True).split(
-            len(resources.get('gpu')))
+            len(resources.get('gpu'))-1)
         self.gpu_resources = gpu_resources * self.args.pipeline_per_gpu
         if len(self.gpu_resources) == 0:
             # CPU only
-            return max(1, len(resources.get('cpu')) // 2)
+            return max(1, len(resources.get('cpu')) // 4)
         else:
             return len(self.gpu_resources)
 
@@ -43,7 +43,7 @@ class ExtractCNNFeature(System):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(__file__)
-    parser.add_argument('list_file_path')
+    parser.add_argument('--list_file_path', default='data/labels/test_for_students.csv')
     parser.add_argument(
         '--video_dir', default=osp.join(
             osp.dirname(__file__), '../data/videos'))
@@ -53,7 +53,7 @@ def parse_args(argv=None):
     parser.add_argument('--pipeline_per_gpu', type=int, default=4)
     parser.add_argument('--replica_per_gpu', type=int, default=1)
     parser.add_argument('--job_timeout', type=int, default=10)
-    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--debug', action='store_true', default=False)
     args = parser.parse_args(argv)
     return args
 

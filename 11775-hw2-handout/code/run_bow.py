@@ -11,7 +11,7 @@ class BuildBagOfWords(System):
 
     def get_num_pipeline(self, resources, *, args):
         self.args = args
-        return min(8, len(resources.get('cpu')))
+        return min(8, len(resources.get('cpu'))) # min 8
 
     def get_stages(self, resources):
         stages = [
@@ -24,16 +24,16 @@ class BuildBagOfWords(System):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(__file__)
-    parser.add_argument('list_file_path')
-    parser.add_argument('model_name')
-    parser.add_argument('feature_dir')
+    parser.add_argument('--list_file_path', default="data/labels/test_for_students.csv") # train_val
+    parser.add_argument('--model_name', default='sift_128')
+    parser.add_argument('--feature_dir', default='data/sift')
     parser.add_argument(
         '--model_dir', default=osp.join(
             osp.dirname(__file__), '../data/kmeans'))
     parser.add_argument(
         '--bow_dir_prefix', default=osp.join(osp.dirname(__file__), 
         '../data/bow'))
-    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--debug', action='store_true', default=True)
     args = parser.parse_args(argv)
     return args
 

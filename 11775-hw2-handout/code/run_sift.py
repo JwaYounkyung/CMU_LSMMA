@@ -11,7 +11,7 @@ class ExtractSIFTFeature(System):
 
     def get_num_pipeline(self, resources, *, args):
         self.args = args
-        return max(1, len(resources.get('cpu')) // 2)
+        return max(1, len(resources.get('cpu')) // 4)
 
     def get_stages(self, resources):
         stages = [
@@ -26,13 +26,13 @@ class ExtractSIFTFeature(System):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(__file__)
-    parser.add_argument('list_file_path')
+    parser.add_argument('--list_file_path', default="data/labels/test_for_students.csv") # train_val.csv
     parser.add_argument(
         '--video_dir', default=osp.join(
             osp.dirname(__file__), '../data/videos'))
     parser.add_argument(
         '--sift_dir', default=osp.join(osp.dirname(__file__), '../data/sift'))
-    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--debug', action='store_true', default=False)
     args = parser.parse_args(argv)
     return args
 

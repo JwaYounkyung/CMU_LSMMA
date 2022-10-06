@@ -31,7 +31,12 @@ class LoadVideo(Stage):
         Return: downsampled frames [t x H x W x C]
         """
         # TODO: downsample the frames to self.target_frame_rate
-        raise NotImplementedError
+        slice_num = int(frame_rate/self.target_frame_rate)
+        index_list = [i for i in range(0,frames.shape[0],slice_num)]  
+        selected_frames = frames[index_list]
+
+        return selected_frames
+        
 
     def process(self, task):
         task.start(self)

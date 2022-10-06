@@ -54,7 +54,14 @@ class CNNFeature(Stage):
         # Then apply self.transforms to batch to get model input.
         # Finally apply self.model on the input to get features.
         # Wrap the model with torch.no_grad() to avoid OOM.
-        raise NotImplementedError
+
+        frames = frames.permute(0, 3, 1, 2)
+        transforms = self.transforms(frames).to(self.device)
+        with torch.no_grad():
+            out = self.model(transforms)['feature']#.softmax(0)
+        
+        features = out.squeeze()
+        return features
 
     def process(self, task):
         task.start(self)

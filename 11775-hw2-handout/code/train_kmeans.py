@@ -20,7 +20,15 @@ def select_features(features: List[np.ndarray]) -> np.ndarray:
     Return: selected features, [n x D]
     """
     # TODO: select subset of features for clustering
-    raise NotImplementedError
+    subset_size = 32  
+    selected_features = []
+    for feature in features: 
+        index = np.random.choice(feature.shape[0],subset_size)
+        selected_features.extend(feature[index])
+    
+    selected_features = np.array(selected_features)
+
+    return selected_features
 
 
 def worker(video_id, *, args):
@@ -34,15 +42,15 @@ def worker(video_id, *, args):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(__file__)
-    parser.add_argument('list_file_path')
-    parser.add_argument('feature_dir')
-    parser.add_argument('num_clusters', type=int)
-    parser.add_argument('model_name')
+    parser.add_argument('--list_file_path', default="data/labels/train_val.csv")
+    parser.add_argument('--feature_dir', default='data/sift')
+    parser.add_argument('--num_clusters', type=int, default=128)
+    parser.add_argument('--model_name', default='sift_128')
     parser.add_argument(
         '--model_dir', default=osp.join(
             osp.dirname(__file__), '../data/kmeans'))
     parser.add_argument('--seed', type=int, default=666)
-    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--debug', action='store_true', default=False)
     args = parser.parse_args(argv)
     return args
 

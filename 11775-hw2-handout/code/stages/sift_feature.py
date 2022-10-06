@@ -30,7 +30,13 @@ class SIFTFeature(Stage):
         # TODO: Extract SIFT feature for the current frame
         # Use self.sift.detectAndCompute
         # Remember to handle when it returns None
-        raise NotImplementedError
+        #img = cv2.imread(frame)
+        gray= cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        kp, feature = self.sift.detectAndCompute(gray,None)
+        if feature is None:
+            feature = np.zeros([self.num_features, 128], dtype=np.float32)
+
+        return feature
 
     def process(self, task):
         task.start(self)
