@@ -43,7 +43,7 @@ class ExtractCNNFeature(System):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(__file__)
-    parser.add_argument('--list_file_path', default='data/labels/test_for_students.csv')
+    parser.add_argument('--list_file_path', default='data/labels/train_val.csv')
     parser.add_argument(
         '--video_dir', default=osp.join(
             osp.dirname(__file__), '../data/videos'))

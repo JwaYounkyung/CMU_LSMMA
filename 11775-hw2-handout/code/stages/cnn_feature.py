@@ -60,7 +60,7 @@ class CNNFeature(Stage):
         with torch.no_grad():
             out = self.model(transforms)['feature']#.softmax(0)
         
-        features = out.squeeze()
+        features = out.squeeze(3).squeeze(2)
         return features
 
     def process(self, task):

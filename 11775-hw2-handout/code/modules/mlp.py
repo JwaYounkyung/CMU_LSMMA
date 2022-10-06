@@ -63,7 +63,7 @@ class MlpClassifier(pl.LightningModule):
     @classmethod
     def add_argparse_args(cls, parent_parser):
         parser = ArgumentParser(parents=[parent_parser], add_help=False)
-        parser.add_argument('--num_features', type=int, default=128)
+        parser.add_argument('--num_features', type=int, default=512)
         parser.add_argument('--num_classes', type=int, default=15)
         parser.add_argument('--learning_rate', type=float, default=0.001)
         parser.add_argument('--scheduler_factor', type=float, default=0.3)

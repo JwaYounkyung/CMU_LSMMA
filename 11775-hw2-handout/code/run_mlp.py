@@ -11,7 +11,7 @@ from modules import FeatureDataModule, MlpClassifier
 
 def parse_args(argv=None):
     parser = ArgumentParser(__file__, add_help=False)
-    parser.add_argument('--name', default='sift')
+    parser.add_argument('--name', default='cnn')
     parser = FeatureDataModule.add_argparse_args(parser)
     parser = MlpClassifier.add_argparse_args(parser)
     parser = pl.Trainer.add_argparse_args(parser)
