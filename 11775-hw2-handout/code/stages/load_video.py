@@ -45,7 +45,7 @@ class LoadVideo(Stage):
         frames, _, meta = read_video(video_path, pts_unit='sec')
         frames = frames.numpy()
         frame_rate = meta['video_fps']
-        selected_frames = self.downsample_frames(frames, frame_rate)
+        selected_frames = frames#self.downsample_frames(frames, frame_rate)
         for i, start in enumerate(range(
                 0, selected_frames.shape[0], self.batch_size)):
             batch_frames = selected_frames[start:start + self.batch_size]

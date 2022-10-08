@@ -13,8 +13,9 @@ class CNN3DFeature(Stage):
     Output: CNN feature [D]
     """
 
-    def allocate_resource(self, resources, *, model_name, weight_name,
-                          node_name, replica_per_gpu=1):
+    def allocate_resource(self, resources, *, model_name='r2plus1d_18', 
+                          weight_name='R2Plus1D_18_Weights',
+                          node_name='avgpool', replica_per_gpu=1):
         self.model_name = model_name
         self.weight_name = weight_name
         self.node_name = node_name
@@ -36,10 +37,14 @@ class CNN3DFeature(Stage):
                 self.device = 'cpu'
                 self.logger.warn('No available GPUs, running on CPU.')
             # TODO: build 3D CNN model with weights and input transforms
-            raise NotImplementedError
+            weights = getattr(video_models, self.weight_name).DEFAULT
+            self.transforms = weights.transforms()
+            base_model = getattr(video_models, self.model_name)(weights=weights)
+            self.model = create_feature_extractor(
+                base_model, {self.node_name: 'feature'})
             self.model = self.model.to(self.device).eval()
 
-    def extract_cnn3d_features(self, clip: np.ndarray) -> np.ndarray:
+    def extract_cnn3d_features(self, clip: torch.Tensor) -> torch.Tensor:
         """
         frame: [T x H x W x C] in uint8 [0, 255]
 
@@ -50,11 +55,19 @@ class CNN3DFeature(Stage):
         # Then apply self.transforms to batch to get model input.
         # Finally apply self.model on the input to get features.
         # Wrap the model with torch.no_grad() to avoid OOM.
-        raise NotImplementedError
+
+        clip = clip.unsqueeze(0)
+        clip = clip.permute(0, 1, 4, 2, 3)
+        transforms = self.transforms(clip).to(self.device)
+        with torch.no_grad():
+            out = self.model(transforms)['feature']#.softmax(0)
+        
+        features = out.squeeze()
+        return features
 
     def process(self, task):
         task.start(self)
         frames = task.content
-        features = self.extract_cnn3d_features(frames)
+        features = self.extract_cnn3d_features(frames).cpu().numpy()
         task.meta['sequence_id'] = task.meta['batch_id']
         return task.finish(features)

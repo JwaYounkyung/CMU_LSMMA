@@ -85,7 +85,7 @@ class FeatureDataModule(pl.LightningDataModule):
         parser.add_argument(
             '--test_list_file', default=osp.abspath(osp.join(osp.dirname(
                 __file__), '../../data/labels/test_for_students.csv')))
-        parser.add_argument('--feature_dir', default='data/cnn')
+        parser.add_argument('--feature_dir', default='data/cnn3d')
         parser.add_argument('--test_frac', type=float, default=0.2)
         parser.add_argument('--batch_size', type=int, default=64)
         parser.add_argument('--split_seed', type=int, default=666)

@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 from torchmetrics import Accuracy
-
+import wandb
 
 class MlpClassifier(pl.LightningModule):
 
@@ -15,7 +15,11 @@ class MlpClassifier(pl.LightningModule):
             # TODO: define model layers here
             # Input self.hparams.num_features
             # Output self.hparams.num_classes
-            nn.Linear(self.hparams.num_features, 256),
+            nn.Linear(self.hparams.num_features, 512),
+            nn.ReLU(),
+            # nn.Linear(1024, 512),
+            # nn.ReLU(),
+            nn.Linear(512, 256),
             nn.ReLU(),
             nn.Linear(256, 128),
             nn.ReLU(),
@@ -57,8 +61,14 @@ class MlpClassifier(pl.LightningModule):
         # TODO: define optimizer and optionally learning rate scheduler
         # The simplest form would be `return torch.optim.Adam(...)`
         # For more advanced usages, see https://pytorch-lightning.readthedocs.io/en/latest/common/lightning_module.html#configure-optimizers
-
-        return torch.optim.Adam(self.model.parameters(), lr=self.hparams.learning_rate, weight_decay=1e-5)
+        optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.hparams.learning_rate, weight_decay=1e-5)
+        dis_sch = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=self.hparams.scheduler_patience)
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": dis_sch
+            },
+        }
 
     @classmethod
     def add_argparse_args(cls, parent_parser):
@@ -67,5 +77,5 @@ class MlpClassifier(pl.LightningModule):
         parser.add_argument('--num_classes', type=int, default=15)
         parser.add_argument('--learning_rate', type=float, default=0.001)
         parser.add_argument('--scheduler_factor', type=float, default=0.3)
-        parser.add_argument('--scheduler_patience', type=int, default=5)
+        parser.add_argument('--scheduler_patience', type=int, default=15)
         return parser
