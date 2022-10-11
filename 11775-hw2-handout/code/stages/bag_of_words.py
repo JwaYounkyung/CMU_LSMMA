@@ -47,7 +47,7 @@ class BagOfWords(Stage):
         Return: pooled vector, [W]
         """
         # TODO: Aggregate frame-level bags into a video-level feature.
-        video_bag = np.sum(bags, axis=0)
+        video_bag = np.mean(bags, axis=0)
         return video_bag
 
     def process(self, task):
