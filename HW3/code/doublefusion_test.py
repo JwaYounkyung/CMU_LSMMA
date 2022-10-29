@@ -20,8 +20,10 @@ def parse_args():
   
   parser.add_argument("--audio_feat_dir", default="data/passt/") 
   parser.add_argument("--list_videos", default="data/labels/test_for_students.csv")
+  parser.add_argument("--video_feat_name1", default="cnn3d") #
+  parser.add_argument("--video_feat_name2", default="cnn") #
 
-  parser.add_argument("--output_file", default="doublefusion.mlp.csv")
+  parser.add_argument("--output_file", default="results/doublefusion.mlp.csv")
 
   parser.add_argument("--audio_feat_appendix", default=".mp3.csv") 
   parser.add_argument("--video_feat_appendix", default=".pkl") 
@@ -42,11 +44,11 @@ if __name__ == '__main__':
     video_ids.append(video_id)
     feat_filepath = os.path.join(args.audio_feat_dir, video_id + args.audio_feat_appendix)
 
-  with open('audio_features.test.npy', 'rb') as f:
+  with open('features/audio_features.test.npy', 'rb') as f:
     audio_feat_list = np.load(f)
-  with open('video_features.test.npy', 'rb') as f:
+  with open('features/video_features'+args.video_feat_name1+ '.train.npy', 'rb') as f:
     video_feat1_list = np.load(f)
-  with open('video_features2.test.npy', 'rb') as f:
+  with open('features/video_features'+args.video_feat_name2+ '.train.npy', 'rb') as f:
     video_feat2_list = np.load(f)
   
   for i in range(len(audio_feat_list)):

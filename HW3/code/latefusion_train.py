@@ -13,13 +13,8 @@ from stages import LoadFeature
 # Train MLP classifier with labels
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--audio_feat_dir", default="data/passt/") #
-parser.add_argument("--video_feat_dir", default="data/cnn3d_1/") #
-parser.add_argument("--feat_dim", type=int, default=527)
 parser.add_argument("--list_videos", default="data/labels/train_val.csv")
-
-parser.add_argument("--audio_feat_appendix", default=".mp3.csv") 
-parser.add_argument("--video_feat_appendix", default=".pkl") 
+parser.add_argument("--video_feat_name", default="cnn3d") #
 
 parser.add_argument("--audio_output_file", default="weights/latefusion.audio.mlp.model") #
 parser.add_argument("--video_output_file", default="weights/latefusion.video.mlp.model") #
@@ -37,11 +32,11 @@ if __name__ == '__main__':
 
 # %% Ensemble Features
 
-  with open('audio_features.npy', 'rb') as f:
+  with open('features/audio_features.npy', 'rb') as f:
     audio_feat_list = np.load(f)
-  with open('video_features.npy', 'rb') as f:
+  with open('features/video_features'+args.video_feat_name+ '.train.npy', 'rb') as f:
     video_feat_list = np.load(f)
-  with open('labels.npy', 'rb') as f:
+  with open('features/labels.npy', 'rb') as f:
     label_list = np.load(f)
 
 # %% Run MLP

@@ -2,28 +2,24 @@
 
 import argparse
 import os
-import pickle
 
 import numpy as np
-from sklearn.neural_network import MLPClassifier
 
 import sys
 from stages import LoadFeature
-from sklearn import preprocessing
 
 # Train MLP classifier with labels
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--audio_feat_dir", default="data/passt/") #
 parser.add_argument("--video_feat_dir", default="data/cnn/") #
+parser.add_argument("--video_feat_name", default="cnn") #
 parser.add_argument("--feat_dim", type=int, default=527)
 parser.add_argument("--train_list_videos", default="data/labels/train_val.csv")
 parser.add_argument("--test_list_videos", default="data/labels/test_for_students.csv")
 
 parser.add_argument("--audio_feat_appendix", default=".mp3.csv") 
 parser.add_argument("--video_feat_appendix", default=".pkl") 
-
-parser.add_argument("--output_file", default="weights/earlyfusion.mlp.model") #
 
 
 if __name__ == '__main__':
@@ -54,10 +50,10 @@ if __name__ == '__main__':
 
   #feat_list = preprocessing.normalize(feat_list, norm='l2')
 
-  with open('audio_features.train.npy', 'wb') as f:
+  with open('features/audio_features.train.npy', 'wb') as f:
     np.save(f, feat_list)
 
-  with open('labels.npy', 'wb') as f:
+  with open('features/labels.npy', 'wb') as f:
     np.save(f, label_list)
 
 # %% Video Train Feature
@@ -73,7 +69,7 @@ if __name__ == '__main__':
 
   #feat_list = preprocessing.normalize(feat_list, norm='l2')
 
-  with open('video_features2.train.npy', 'wb') as f:
+  with open('features/video_features'+args.video_feat_name+ '.train.npy', 'wb') as f:
     np.save(f, feat_list)
 
 # %% Test Features
@@ -110,6 +106,6 @@ if __name__ == '__main__':
 
   with open('audio_features.test.npy', 'wb') as f:
     np.save(f, audio_feat_list)
-  with open('video_features2.test.npy', 'wb') as f:
+  with open('video_features'+args.video_feat_name+'.test.npy', 'wb') as f:
     np.save(f, video_feat_list)
   
