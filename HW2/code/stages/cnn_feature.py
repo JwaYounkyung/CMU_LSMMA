@@ -58,7 +58,7 @@ class CNNFeature(Stage):
         frames = frames.permute(0, 3, 1, 2)
         transforms = self.transforms(frames).to(self.device)
         with torch.no_grad():
-            out = self.model(transforms)['feature']#.softmax(0)
+            out = self.model(transforms)['feature']
         
         features = out.squeeze(3).squeeze(2)
         return features
